@@ -4,3 +4,4 @@ newline
 123
 
 xin
+a
