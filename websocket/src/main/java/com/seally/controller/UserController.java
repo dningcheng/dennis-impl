@@ -9,6 +9,7 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.RemoteEndpoint.Async;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -56,7 +57,7 @@ public class UserController {
 	public void onClose() {
 		webSocketSet.remove(this); // 从set中删除
 		subOnlineCount(); // 在线数减1
-		System.out.println("客户端"+this.session.getId()+"有一连接关闭！当前在线人数为" + getOnlineCount());
+		System.out.println("客户端"+this.session.getId()+"有一连接关闭！当前在线人数为" + getOnlineCount()+"   "+webSocketSet.size());
 	}
 
 	/**
@@ -110,11 +111,13 @@ public class UserController {
 			ChatMessage msg = new ChatMessage();
 			msg.setMsg(message);
 			userService.saveMessage(msg);
-			this.session.getBasicRemote().sendText(message);
+			Async asyncRemote = this.session.getAsyncRemote();
+			System.out.println(session.getUserPrincipal());
+			asyncRemote.sendText(message);
+			//this.session.getBasicRemote().sendText(message);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// this.session.getAsyncRemote().sendText(message);
 	}
 
 	public static synchronized int getOnlineCount() {
