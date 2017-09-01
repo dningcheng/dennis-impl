@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>轻聊</title>
-<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
-
+<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+<script type="text/javascript" src="js/socketClient.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
 <script type="text/javascript">
 
 	/*	websocket客户端的可用属性与方法
@@ -26,68 +28,135 @@
 		onerror异常触发的事件；
 		onclose关闭连接触发的事件；
 	*/
-	var websocket = null;
-	if(typeof(EventSource)!=="undefined"){
-		websocket = new WebSocket("ws://localhost:8080/websocket/seally-ws/dnc");
-		//websocket = new WebSocket("ws://localhost:8080/websocket/seally-websocket/dnc");
-	}else{
-		alert("浏览器不支持websocket.....")
-	}
-	//连接发生错误的回调方法
-	websocket.onerror = function(){
-	    setMessageInnerHTML("会话连接异常....");
-	};
-	 
-	//连接成功建立的回调方法
-	websocket.onopen = function(event){
-	    setMessageInnerHTML("已经进入会话状态....");
-	}
-	 
-	//接收到消息的回调方法
-	websocket.onmessage = function(event){
-	    setMessageInnerHTML(event.data);
-	}
-	 
-	//连接关闭的回调方法
-	websocket.onclose = function(){
-	    setMessageInnerHTML("close");
-	}
-	 
-	//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
-	window.onbeforeunload = function(){
-	    websocket.close();
-	}
-	 
-	//将消息显示在网页上
-	function setMessageInnerHTML(innerHTML){
-	    $("#message").html($("#message").html()+innerHTML+"<br/>");
-	}
-	 
-	//关闭连接
-	function closeWebSocket(){
-	    websocket.close();
-	}
-	 
-	//发送消息
-	function send(){
-	    var message =$("#text").val();// document.getElementById('text').value;
-	    websocket.send(message);
+	
+	var chartManager={
+		var websocket = null;
+		function startChart(){
+			if(typeof(EventSource)!=="undefined"){
+				websocket = new WebSocket("ws://localhost:8080/websocket/seally-ws/dnc");
+				//websocket = new WebSocket("ws://localhost:8080/websocket/seally-websocket/dnc");
+			}else{
+				alert("浏览器不支持websocket.....")
+			}
+		}	
+		//连接发生错误的回调方法
+		websocket.onerror = function(event){
+		    setMessageInnerHTML("会话连接异常....");
+		};
+		 
+		//连接成功建立的回调方法
+		websocket.onopen = function(event){
+		    setMessageInnerHTML("已经进入会话状态....");
+		}
+		 
+		//接收到消息的回调方法
+		websocket.onmessage = function(event){
+		    setMessageInnerHTML(event.data);
+		}
+		 
+		//连接关闭的回调方法
+		websocket.onclose = function(event){
+		    setMessageInnerHTML("close");
+		}
+		 
+		//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+		window.onbeforeunload = function(){
+		    websocket.close();
+		}
+		 
+		//将消息显示在网页上
+		function setMessageInnerHTML(innerHTML){
+		    $("#message").html($("#message").html()+innerHTML+"<br/>");
+		}
+		 
+		//关闭连接
+		function closeWebSocket(){
+		    websocket.close();
+		}
+		 
+		//发送消息
+		function send(){
+		    var message =$("#text").val();// document.getElementById('text').value;
+		    websocket.send(message);
+		}
+		
+		function leave(){
+			websocket.close();
+		}
 	}
 	
-	function leave(){
-		websocket.close();
-	}
 	
-	function open(){
-		websocket.open();
-	}
+	
+		
+	
+	
 </script>
 </head>
 <body>
-	欢迎来到聊天首页......<br/>
-	<div id="message" style="width: 500px;height: 300px;overflow: auto;border: solid 1px;"></div><br/>
-	<input type="text" id="text"style="width: 500px;"><button onclick="send();">发送</button>
-	<button onclick="leave();">离开</button>
-	<button onclick="open();">加入</button>
+	<div class="container-fluid" style="padding: 0px;">
+	  <ol class="breadcrumb">
+		  <li><a href="#">物业报修</a></li>
+		  <li><a href="#">报修记录</a></li>
+		  <li class="active">报修详情</li>
+	  </ol>
+	  <div class="container">
+	  	  <div class="panel panel-default" style="width: 98%;margin: 0px;">
+			  <div class="panel-heading"><h3>厨房漏水--已完成</h3></div>
+			  <div class="panel-body">
+			      <p>&nbsp;&nbsp;&nbsp;&nbsp;地板漏水，师傅什么时候有时间过来修理一下，有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下
+				    有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下
+				    有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下
+				    有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下有时间过来修理一下
+				    有时间过来修理一下有时间过来修理一下有时间过来修理一下
+				  </p>
+				  <div class="row">
+				  <div class="col-sm-6 col-md-4">
+				    <div class="thumbnail">
+				      <img src="img/bx01.jpg" alt="...">
+				    </div>
+				  </div>
+				  <div class="col-sm-6 col-md-4">
+				    <div class="thumbnail">
+				      <img src="img/bx01.jpg" alt="...">
+				    </div>
+				  </div>
+				  <div class="col-sm-6 col-md-4">
+				    <div class="thumbnail">
+				      <img src="img/bx01.jpg" alt="...">
+				    </div>
+				  </div>
+				  </div>
+				   <div class="row">
+				   	<div class="col-sm-8 col-md-8" style="border: solid 1px #E8E8E8;">
+				    <div class="thumbnail">
+				      	沟通记录
+				    </div>
+				    <div id="message" style="width: 100%;height: 300px;overflow: auto;"></div><br/>
+					<input type="text" id="text"style="width: 80%;"><button onclick="send();">发送</button>
+					<button onclick="leave();">离开</button>
+					<button onclick="chartManager.startChart();">加入</button>
+				  </div>
+				  <div class="col-sm-4 col-md-4" style="border: solid 1px #E8E8E8;">
+				    	服务态度：已完成<br/>
+				    	维修师傅：王师傅<br/>
+				    	申请物业：赛霸电子616<br/>
+				    	付款额：60元<br/>
+				    	服务完成时间：2017-01-26<br/>
+				    	服务预约时间：2017-01-26<br/>
+				    	服务申请时间：2017-01-26<br/>
+				    	服务评价<br/>
+				    	*****<br/><br/>
+				    	王师傅比较专业，以后多请他维修...
+				  </div>
+				   </div>
+				  
+			  </div>
+		  </div>
+	  </div>
+	</div>
+	
+	
+	
+	
 </body>
 </html>
