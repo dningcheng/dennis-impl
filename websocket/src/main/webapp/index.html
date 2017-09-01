@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>轻聊</title>
+<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+
+<script type="text/javascript">
+
+	/*	websocket客户端的可用属性与方法
+		构造：	
+		new WebSocket("ws://localhost:8080/websocket/seally-websocket"); 创建并打开连接
+		属性：
+		readyState表示连接有四种状态：
+			CONNECTING (0)：表示还没建立连接；
+			OPEN (1)： 已经建立连接，可以进行通讯；
+			CLOSING (2)：通过关闭握手，正在关闭连接；
+			CLOSED (3)：连接已经关闭或无法打开；
+		url是代表 WebSocket 服务器的网络地址，协议通常是”ws”或“wss(加密通信)”,
+		方法：
+		send(msg) 方法就是发送数据到服务器端；
+		close() 方法就是关闭连接；
+		回调事件：
+		onopen连接建立，即握手成功触发的事件；
+		onmessage收到服务器消息时触发的事件；
+		onerror异常触发的事件；
+		onclose关闭连接触发的事件；
+	*/
+	var websocket = null;
+	if(typeof(EventSource)!=="undefined"){
+		websocket = new WebSocket("ws://localhost:8080/websocket/seally-ws/dnc");
+		//websocket = new WebSocket("ws://localhost:8080/websocket/seally-websocket/dnc");
+	}else{
+		alert("浏览器不支持websocket.....")
+	}
+	//连接发生错误的回调方法
+	websocket.onerror = function(){
+	    setMessageInnerHTML("会话连接异常....");
+	};
+	 
+	//连接成功建立的回调方法
+	websocket.onopen = function(event){
+	    setMessageInnerHTML("已经进入会话状态....");
+	}
+	 
+	//接收到消息的回调方法
+	websocket.onmessage = function(event){
+	    setMessageInnerHTML(event.data);
+	}
+	 
+	//连接关闭的回调方法
+	websocket.onclose = function(){
+	    setMessageInnerHTML("close");
+	}
+	 
+	//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+	window.onbeforeunload = function(){
+	    websocket.close();
+	}
+	 
+	//将消息显示在网页上
+	function setMessageInnerHTML(innerHTML){
+	    $("#message").html($("#message").html()+innerHTML+"<br/>");
+	}
+	 
+	//关闭连接
+	function closeWebSocket(){
+	    websocket.close();
+	}
+	 
+	//发送消息
+	function send(){
+	    var message =$("#text").val();// document.getElementById('text').value;
+	    websocket.send(message);
+	}
+	
+	function leave(){
+		websocket.close();
+	}
+	
+	function open(){
+		websocket.open();
+	}
+</script>
+</head>
+<body>
+	欢迎来到聊天首页......<br/>
+	<div id="message" style="width: 500px;height: 300px;overflow: auto;border: solid 1px;"></div><br/>
+	<input type="text" id="text"style="width: 500px;"><button onclick="send();">发送</button>
+	<button onclick="leave();">离开</button>
+	<button onclick="open();">加入</button>
+</body>
+</html>
